@@ -8,6 +8,7 @@ dotenv.config();
 
 const app = express();
 app.use(express.json());
+app.use(cors());
 // Routes
 app.use('/book',bookRoutes);
 app.get('/',(req,res)=>{ 

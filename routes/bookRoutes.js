@@ -1,8 +1,28 @@
 import express from 'express';
 import Book from '../models/bookModel.js';
+import mongoose from 'mongoose';
 
 const router = express.Router();
-router.get('/', async (req, res) => {
+router.get('/search/:id', async (req, res) => {
+  try {
+    // Extract the ID from the route parameter
+    const { id } = req.params;
+     if (!mongoose.Types.ObjectId.isValid(id)) {
+      res.status(400).json({message:"Invalid Id,please check again"});
+     }
+    const currBook = await Book.findById(id); 
+    if(!currBook)
+    {
+     res.status(404).json({ message:"Book not found"});
+    }
+    // Return the book in the response
+    res.status(200).json({currBook});
+  } catch(error){
+    res.status(500).json({ message: "Error fetching book", error: error.message });
+  }
+});
+
+router.get('/allbooks', async (req, res) => {
   try {
     // Get the page and limit query parameters, default to page 1 and limit 10
     const page = parseInt(req.query.page) || 1;
@@ -35,9 +55,9 @@ router.get('/', async (req, res) => {
 });
 
 router.post('/addbook',async(req,res)=>{
-     const {title,author,genre,publishedDtae} = req.body;
+     const {title,author,genre,publishedDate} = req.body;
 
-     const newBook = new Book({ title,author,genre,publishedDtae});
+     const newBook = new Book({ title,author,genre,publishedDate});
      
     try{
         await newBook.save();
