@@ -4,16 +4,19 @@ import cors from 'cors';
 import Book from "./models/bookModel.js";
 import dotenv from 'dotenv'; 
 import bookRoutes from './routes/bookRoutes.js'
+import errorHandler from './middleware/errorHandler.js';
 dotenv.config();
 
 const app = express();
 app.use(express.json());
 app.use(cors());
-// Routes
-app.use('/book',bookRoutes);
+
+app.use('/api/book', bookRoutes);
 app.get('/',(req,res)=>{ 
     res.send("This is my first backend page");
 })
+
+app.use(errorHandler);
 
 mongoose.connect(process.env.MONGODB_URI)
 .then(()=>{
