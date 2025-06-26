@@ -81,6 +81,4 @@ function deleteBook(id) {
       alert('❌ Error deleting book: ' + err.message);
     });
 }
-
-// 🚀 Initial load
 loadBooks();
